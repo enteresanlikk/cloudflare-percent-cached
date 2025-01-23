@@ -55,13 +55,13 @@ const parseArguments = () => {
             type: 'string'
         })
         .option('i', {
-            alias: 'include-statuses',
+            alias: 'includeStatuses',
             describe: 'Cache statuses to include in calculation (comma-separated)',
             type: 'string',
             default: DEFAULT_INCLUDE_CACHE_STATUSES.join(',')
         })
         .option('e', {
-            alias: 'exclude-statuses',
+            alias: 'excludeStatuses',
             describe: 'Cache statuses to exclude from total requests (comma-separated)',
             type: 'string',
             default: DEFAULT_EXCLUDE_CACHE_STATUSES.join(',')
@@ -97,8 +97,8 @@ const parseArguments = () => {
             }
 
             // Parse cache statuses
-            argv.includeStatuses = argv['include-statuses'].split(',').map(s => s.trim());
-            argv.excludeStatuses = argv['exclude-statuses'].split(',').map(s => s.trim());
+            argv.includeStatuses = argv.includeStatuses.split(',').map(s => s.trim());
+            argv.excludeStatuses = argv.excludeStatuses.split(',').map(s => s.trim());
 
             return true;
         })

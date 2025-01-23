@@ -55,7 +55,7 @@ cfpc -z="zone-id" -h="example.com" -t="24 hours"
 cfpc -z="zone-id" -h="example.com" -s="2024-01-01T00:00:00Z" -u="2024-01-31T23:59:59Z"
 
 # Using custom cache status configuration
-cfpc -z="zone-id" -h="example.com" -t="24 hours" --include-statuses="hit,dynamic" --exclude-statuses="bypass"
+cfpc -z="zone-id" -h="example.com" -t="24 hours" --i="hit,dynamic" --e="bypass"
 
 # Using explicit API token
 cfpc -a="api-token" -z="zone-id" -h="example.com" -t="24 hours"
@@ -96,8 +96,8 @@ cfpc -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
 | `--since` | `-s` | Start date in ISO format | - |
 | `--until` | `-u` | End date in ISO format | - |
 | `--outputFile` | `-o` | Save results to CSV file | - |
-| `--include-statuses` | - | Cache statuses to include in calculation | "hit,none" |
-| `--exclude-statuses` | - | Cache statuses to exclude from total requests | - |
+| `--includeStatuses` | `-i` | Cache statuses to include in calculation | "hit,none" |
+| `--excludeStatuses` | `-e` | Cache statuses to exclude from total requests | - |
 
 Note: You can either use `--timeWindow` or the combination of `--since` and `--until`, but not both at the same time.
 
@@ -122,8 +122,8 @@ When using custom date range with `-s` and `-u` options, dates should be in ISO 
 ### Cache Status Configuration
 
 You can customize which cache statuses are:
-1. Included in the cached requests calculation (`--include-statuses`)
-2. Excluded from total requests calculation (`--exclude-statuses`)
+1. Included in the cached requests calculation (`--i`)
+2. Excluded from total requests calculation (`--e`)
 
 Available cache statuses:
 - `hit`: Served from cache
@@ -135,7 +135,7 @@ Default configuration:
 
 Example:
 ```bash
-cfpc -z="zone-id" -h="example.com" --include-statuses="hit" --exclude-statuses="none"
+cfpc -z="zone-id" -h="example.com" --i="hit" --e="none"
 ```
 
 ## Output
