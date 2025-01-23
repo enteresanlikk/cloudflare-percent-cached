@@ -13,10 +13,22 @@ A command-line tool to check the cache hit ratio for Cloudflare zones. It can an
 
 ## Installation
 
-1. Clone the repository
-2. Install dependencies:
+### Local Installation
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/cloudflare-percent-cached.git
+cd cloudflare-percent-cached
+
+# Install dependencies
 npm install
+
+# Link the package globally
+npm link
+```
+
+### Global Installation (when published)
+```bash
+npm install -g cloudflare-percent-cached
 ```
 
 ## Configuration
@@ -30,16 +42,18 @@ CLOUDFLARE_API_TOKEN=your_api_token_here
 
 ## Usage
 
+You can use either the full command `cloudflare-percent-cached` or the short alias `cfpc`.
+
 ### Single Domain Analysis
 ```bash
 # Using environment variable for API token
-node percent-cached.js -z="zone-id" -h="example.com" -t="24 hours"
+cfpc -z="zone-id" -h="example.com" -t="24 hours"
 
 # Using explicit API token
-node percent-cached.js -a="api-token" -z="zone-id" -h="example.com" -t="24 hours"
+cfpc -a="api-token" -z="zone-id" -h="example.com" -t="24 hours"
 
 # Save results to CSV file
-node percent-cached.js -a="api-token" -z="zone-id" -h="example.com" -t="24 hours" -o="results.csv"
+cfpc -a="api-token" -z="zone-id" -h="example.com" -t="24 hours" -o="results.csv"
 ```
 
 ### Multiple Domains Analysis
@@ -53,10 +67,10 @@ your-zone-id-2,example2.com
 Then run:
 ```bash
 # Display results in console
-node percent-cached.js -a="api-token" -f="sites.csv" -t="24 hours"
+cfpc -a="api-token" -f="sites.csv" -t="24 hours"
 
 # Save results to CSV file
-node percent-cached.js -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
+cfpc -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
 ```
 
 ### Command Line Options

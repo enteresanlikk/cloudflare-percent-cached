@@ -1,11 +1,20 @@
 {
   "name": "cloudflare-percent-cached",
   "version": "1.0.0",
-  "main": "percent-cached.js",
-  "keywords": [],
+  "main": "src/index.js",
+  "bin": {
+    "cloudflare-percent-cached": "./bin/cloudflare-percent-cached",
+    "cfpc": "./bin/cloudflare-percent-cached"
+  },
+  "keywords": [
+    "cloudflare",
+    "cache",
+    "analytics",
+    "cli"
+  ],
   "author": "Bilal Demir",
   "license": "ISC",
-  "description": "",
+  "description": "CLI tool to check cache hit ratio for Cloudflare zones",
   "dependencies": {
     "csvtojson": "^2.0.10",
     "dotenv": "^16.4.7",
