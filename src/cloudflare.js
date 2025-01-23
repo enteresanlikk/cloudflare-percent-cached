@@ -67,6 +67,14 @@ const getPercentCached = async ({
     let totalRequests = 0;
     let cachedRequests = 0;
 
+    if (includeStatuses) {
+        excludeStatuses = excludeStatuses.filter(status => !includeStatuses.includes(status));
+    }
+
+    if (excludeStatuses) {
+        includeStatuses = includeStatuses.filter(status => !excludeStatuses.includes(status));
+    }
+
     for (const curr of data) {
         if (includeStatuses.includes(curr.dimensions.cacheStatus)) {
             cachedRequests += curr.count;
