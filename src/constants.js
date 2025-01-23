@@ -9,6 +9,9 @@ const CACHE_STATUSES = [
     },
 ];
 
+const DEFAULT_INCLUDE_CACHE_STATUSES = CACHE_STATUSES.filter(s => s.isIncludeCalculation).map(s => s.value);
+const DEFAULT_EXCLUDE_CACHE_STATUSES = CACHE_STATUSES.filter(s => !s.isIncludeCalculation).map(s => s.value);
+
 const DEFAULT_TIME_WINDOW = '24 hours';
 const TIME_WINDOWS = {
     '30 minutes': () => {
@@ -74,6 +77,8 @@ const getTimeRange = ({ timeWindow, since, until }) => {
 
 module.exports = {
     CACHE_STATUSES,
+    DEFAULT_INCLUDE_CACHE_STATUSES,
+    DEFAULT_EXCLUDE_CACHE_STATUSES,
     DEFAULT_TIME_WINDOW,
     TIME_WINDOWS,
     getTimeRange,

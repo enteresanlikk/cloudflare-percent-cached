@@ -1,6 +1,17 @@
-const { CACHE_STATUSES } = require('./constants');
+const {
+    DEFAULT_INCLUDE_CACHE_STATUSES,
+    DEFAULT_EXCLUDE_CACHE_STATUSES,
+} = require('./constants');
 
-const getPercentCached = async ({ apiToken, zoneId, host, sinceTime, untilTime }) => {
+const getPercentCached = async ({ 
+    apiToken, 
+    zoneId, 
+    host, 
+    sinceTime, 
+    untilTime,
+    includeStatuses = DEFAULT_INCLUDE_CACHE_STATUSES,
+    excludeStatuses = DEFAULT_EXCLUDE_CACHE_STATUSES
+}) => {
     const response = await fetch('https://api.cloudflare.com/client/v4/graphql', {
         method: 'POST',
         headers: {
@@ -53,23 +64,15 @@ const getPercentCached = async ({ apiToken, zoneId, host, sinceTime, untilTime }
 
     const data = responseData.data.viewer.zones[0].httpRequestsAdaptiveGroups;
 
-    const includeCalculationStatuses = CACHE_STATUSES
-        .filter(status => status.isIncludeCalculation)
-        .map(status => status.value);
-
-    const excludeCalculationStatuses = CACHE_STATUSES
-        .filter(status => !status.isIncludeCalculation)
-        .map(status => status.value);
-
     let totalRequests = 0;
     let cachedRequests = 0;
 
     for (const curr of data) {
-        if (includeCalculationStatuses.includes(curr.dimensions.cacheStatus)) {
+        if (includeStatuses.includes(curr.dimensions.cacheStatus)) {
             cachedRequests += curr.count;
         }
 
-        if (!excludeCalculationStatuses.includes(curr.dimensions.cacheStatus)) {
+        if (!excludeStatuses.includes(curr.dimensions.cacheStatus)) {
             totalRequests += curr.count;
         }
     }

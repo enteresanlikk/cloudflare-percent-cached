@@ -1,6 +1,11 @@
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
-const { TIME_WINDOWS, DEFAULT_TIME_WINDOW } = require('./constants');
+const {
+    TIME_WINDOWS,
+    DEFAULT_TIME_WINDOW,
+    DEFAULT_INCLUDE_CACHE_STATUSES,
+    DEFAULT_EXCLUDE_CACHE_STATUSES,
+} = require('./constants');
 
 const parseArguments = () => {
     const argv = yargs(hideBin(process.argv))
@@ -49,6 +54,18 @@ const parseArguments = () => {
             describe: 'Save results to CSV file',
             type: 'string'
         })
+        .option('i', {
+            alias: 'include-statuses',
+            describe: 'Cache statuses to include in calculation (comma-separated)',
+            type: 'string',
+            default: DEFAULT_INCLUDE_CACHE_STATUSES.join(',')
+        })
+        .option('e', {
+            alias: 'exclude-statuses',
+            describe: 'Cache statuses to exclude from total requests (comma-separated)',
+            type: 'string',
+            default: DEFAULT_EXCLUDE_CACHE_STATUSES.join(',')
+        })
         .check((argv) => {
             if (!argv.apiToken) {
                 throw new Error('API token is required. Provide it via -a option or CLOUDFLARE_API_TOKEN environment variable.');
@@ -78,6 +95,11 @@ const parseArguments = () => {
             if (!argv.timeWindow && !argv.since && !argv.until) {
                 argv.timeWindow = DEFAULT_TIME_WINDOW;
             }
+
+            // Parse cache statuses
+            argv.includeStatuses = argv['include-statuses'].split(',').map(s => s.trim());
+            argv.excludeStatuses = argv['exclude-statuses'].split(',').map(s => s.trim());
+
             return true;
         })
         .argv;

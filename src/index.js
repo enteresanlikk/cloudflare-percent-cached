@@ -21,6 +21,8 @@ const run = async () => {
             host: site.host,
             sinceTime: sinceTime.toISOString(),
             untilTime: untilTime.toISOString(),
+            includeStatuses: argv.includeStatuses,
+            excludeStatuses: argv.excludeStatuses,
         })));
     } else {
         const result = await getPercentCached({
@@ -29,6 +31,8 @@ const run = async () => {
             host: argv.host,
             sinceTime: sinceTime.toISOString(),
             untilTime: untilTime.toISOString(),
+            includeStatuses: argv.includeStatuses,
+            excludeStatuses: argv.excludeStatuses,
         });
         results = [result];
     }
