@@ -3,7 +3,7 @@ const { hideBin } = require('yargs/helpers');
 const { TIME_WINDOWS, DEFAULT_TIME_WINDOW } = require('./constants');
 
 const parseArguments = () => {
-    return yargs(hideBin(process.argv))
+    const argv = yargs(hideBin(process.argv))
         .option('a', {
             alias: 'apiToken',
             describe: 'Cloudflare API token',
@@ -30,7 +30,19 @@ const parseArguments = () => {
             describe: 'Time window for statistics',
             type: 'string',
             choices: Object.keys(TIME_WINDOWS),
-            default: DEFAULT_TIME_WINDOW
+            conflicts: ['since', 'until']
+        })
+        .option('s', {
+            alias: 'since',
+            describe: 'Start date in ISO format (e.g., 2024-01-01T00:00:00Z)',
+            type: 'string',
+            implies: 'until'
+        })
+        .option('u', {
+            alias: 'until',
+            describe: 'End date in ISO format (e.g., 2024-01-31T23:59:59Z)',
+            type: 'string',
+            implies: 'since'
         })
         .option('o', {
             alias: 'outputFile',
@@ -44,9 +56,33 @@ const parseArguments = () => {
             if (!argv.filePath && (!argv.zoneId || !argv.host)) {
                 throw new Error('Either provide a file path (-f) or both zone ID (-z) and host (-h)');
             }
+            if (argv.since && argv.until) {
+                let sinceDate;
+                try {
+                    sinceDate = new Date(argv.since);
+                } catch (error) {
+                    throw new Error('Invalid since date format. Use ISO format (e.g., 2024-01-01T00:00:00Z)');
+                }
+
+                let untilDate;
+                try {
+                    untilDate = new Date(argv.until);
+                } catch (error) {
+                    throw new Error('Invalid until date format. Use ISO format (e.g., 2024-01-01T00:00:00Z)');
+                }
+
+                if (sinceDate >= untilDate) {
+                    throw new Error('Start date must be before end date');
+                }
+            }
+            if (!argv.timeWindow && !argv.since && !argv.until) {
+                argv.timeWindow = DEFAULT_TIME_WINDOW;
+            }
             return true;
         })
         .argv;
+
+    return argv;
 };
 
 module.exports = {

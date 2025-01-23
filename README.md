@@ -7,6 +7,7 @@ A command-line tool to check the cache hit ratio for Cloudflare zones. It can an
 - Check cache statistics for a single domain
 - Analyze multiple domains using a CSV file
 - Configurable time windows (30 minutes to 30 days)
+- Custom date range support with ISO format dates
 - Environment variable support for API token
 - Detailed statistics including total requests and cached requests
 - Export results to CSV file
@@ -46,8 +47,11 @@ You can use either the full command `cloudflare-percent-cached` or the short ali
 
 ### Single Domain Analysis
 ```bash
-# Using environment variable for API token
+# Using predefined time window
 cfpc -z="zone-id" -h="example.com" -t="24 hours"
+
+# Using custom date range
+cfpc -z="zone-id" -h="example.com" -s="2024-01-01T00:00:00Z" -u="2024-01-31T23:59:59Z"
 
 # Using explicit API token
 cfpc -a="api-token" -z="zone-id" -h="example.com" -t="24 hours"
@@ -66,8 +70,11 @@ your-zone-id-2,example2.com
 
 Then run:
 ```bash
-# Display results in console
+# Using predefined time window
 cfpc -a="api-token" -f="sites.csv" -t="24 hours"
+
+# Using custom date range
+cfpc -a="api-token" -f="sites.csv" -s="2024-01-01T00:00:00Z" -u="2024-01-31T23:59:59Z"
 
 # Save results to CSV file
 cfpc -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
@@ -82,7 +89,11 @@ cfpc -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
 | `--host` | `-h` | Host to check | - |
 | `--filePath` | `-f` | Path to CSV file containing sites | - |
 | `--timeWindow` | `-t` | Time window for statistics | "24 hours" |
+| `--since` | `-s` | Start date in ISO format | - |
+| `--until` | `-u` | End date in ISO format | - |
 | `--outputFile` | `-o` | Save results to CSV file | - |
+
+Note: You can either use `--timeWindow` or the combination of `--since` and `--until`, but not both at the same time.
 
 ### Available Time Windows
 
@@ -95,6 +106,12 @@ cfpc -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
 - "14 days"
 - "21 days"
 - "30 days"
+
+### Custom Date Range Format
+
+When using custom date range with `-s` and `-u` options, dates should be in ISO format:
+- Example start date: `2024-01-01T00:00:00Z`
+- Example end date: `2024-01-31T23:59:59Z`
 
 ## Output
 

@@ -1,13 +1,16 @@
 require('dotenv').config();
-const { TIME_WINDOWS } = require('./constants');
+const { getTimeRange } = require('./constants');
 const { getPercentCached } = require('./cloudflare');
 const { readSitesFromCSV, saveToCSV } = require('./csv-utils');
 const { parseArguments } = require('./cli');
 
 const run = async () => {
     const argv = parseArguments();
-    const sinceTime = (TIME_WINDOWS[argv.timeWindow])();
-    const untilTime = new Date();
+    const { sinceTime, untilTime } = getTimeRange({
+        timeWindow: argv.timeWindow,
+        since: argv.since,
+        until: argv.until
+    });
 
     let results;
     if (argv.filePath) {

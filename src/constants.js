@@ -58,8 +58,23 @@ const TIME_WINDOWS = {
     },
 };
 
+const getTimeRange = ({ timeWindow, since, until }) => {
+    if (since && until) {
+        return {
+            sinceTime: new Date(since),
+            untilTime: new Date(until)
+        };
+    }
+
+    const sinceTime = timeWindow ? TIME_WINDOWS[timeWindow]() : TIME_WINDOWS[DEFAULT_TIME_WINDOW]();
+    const untilTime = new Date();
+
+    return { sinceTime, untilTime };
+};
+
 module.exports = {
     CACHE_STATUSES,
     DEFAULT_TIME_WINDOW,
     TIME_WINDOWS,
+    getTimeRange,
 };
