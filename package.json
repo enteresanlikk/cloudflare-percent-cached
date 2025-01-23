@@ -9,6 +9,7 @@
   "dependencies": {
     "csvtojson": "^2.0.10",
     "dotenv": "^16.4.7",
+    "json2csv": "^5.0.7",
     "yargs": "^17.7.2"
   }
 }

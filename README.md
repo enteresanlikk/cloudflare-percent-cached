@@ -9,6 +9,7 @@ A command-line tool to check the cache hit ratio for Cloudflare zones. It can an
 - Configurable time windows (30 minutes to 30 days)
 - Environment variable support for API token
 - Detailed statistics including total requests and cached requests
+- Export results to CSV file
 
 ## Installation
 
@@ -36,19 +37,26 @@ node percent-cached.js -z="zone-id" -h="example.com" -t="24 hours"
 
 # Using explicit API token
 node percent-cached.js -a="api-token" -z="zone-id" -h="example.com" -t="24 hours"
+
+# Save results to CSV file
+node percent-cached.js -a="api-token" -z="zone-id" -h="example.com" -t="24 hours" -o="results.csv"
 ```
 
 ### Multiple Domains Analysis
 Create a CSV file (e.g., `sites.csv`) with the following format:
 ```csv
 zoneId,host
-1234567890,www.google.com
-1234567890,www.facebook.com
+your-zone-id-1,example1.com
+your-zone-id-2,example2.com
 ```
 
 Then run:
 ```bash
+# Display results in console
 node percent-cached.js -a="api-token" -f="sites.csv" -t="24 hours"
+
+# Save results to CSV file
+node percent-cached.js -a="api-token" -f="sites.csv" -t="24 hours" -o="results.csv"
 ```
 
 ### Command Line Options
@@ -60,6 +68,7 @@ node percent-cached.js -a="api-token" -f="sites.csv" -t="24 hours"
 | `--host` | `-h` | Host to check | - |
 | `--filePath` | `-f` | Path to CSV file containing sites | - |
 | `--timeWindow` | `-t` | Time window for statistics | "24 hours" |
+| `--outputFile` | `-o` | Save results to CSV file | - |
 
 ### Available Time Windows
 
@@ -82,3 +91,5 @@ The tool outputs a table with the following information for each domain:
 - Cache hit ratio percentage
 - Total requests
 - Cached requests
+
+When using the `-o` option, these results will also be saved to a CSV file.

@@ -2,6 +2,8 @@ require('dotenv').config();
 const csvtojson = require('csvtojson');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
+const fs = require('fs');
+const { Parser } = require('json2csv');
 
 const CACHE_STATUSES = [
     {
@@ -137,7 +139,7 @@ const getPercentCached = async ({ apiToken, zoneId, host, sinceTime, untilTime }
         }
     }
 
-    const percentCached = (cachedRequests / totalRequests) * 100;
+    const percentCached = ((cachedRequests / totalRequests) * 100).toFixed(2) + '%';
 
     return {
         zoneId,
@@ -148,6 +150,15 @@ const getPercentCached = async ({ apiToken, zoneId, host, sinceTime, untilTime }
         totalRequests,
         cachedRequests,
     };
+};
+
+const saveToCSV = (data, outputFile) => {
+    const parser = new Parser({
+        fields: ['zoneId', 'host', 'sinceTime', 'untilTime', 'percentCached', 'totalRequests', 'cachedRequests'],
+    });
+    const csv = parser.parse(data);
+    fs.writeFileSync(outputFile, csv);
+    console.log(`Results saved to ${outputFile}`);
 };
 
 const run = async () => {
@@ -180,6 +191,11 @@ const run = async () => {
             choices: Object.keys(TIME_WINDOWS),
             default: DEFAULT_TIME_WINDOW
         })
+        .option('o', {
+            alias: 'outputFile',
+            describe: 'Save results to CSV file',
+            type: 'string'
+        })
         .check((argv) => {
             if (!argv.apiToken) {
                 throw new Error('API token is required. Provide it via -a option or CLOUDFLARE_API_TOKEN environment variable.');
@@ -194,32 +210,35 @@ const run = async () => {
     const sinceTime = (TIME_WINDOWS[argv.timeWindow])();
     const untilTime = new Date();
 
+    let results;
     if (argv.filePath) {
         const sites = await csvtojson().fromFile(argv.filePath);
-        const responses = await Promise.all(sites.map(site => getPercentCached({
+        results = await Promise.all(sites.map(site => getPercentCached({
             apiToken: argv.apiToken,
             zoneId: site.zoneId,
             host: site.host,
             sinceTime: sinceTime.toISOString(),
             untilTime: untilTime.toISOString(),
         })));
-
-        console.table(responses);
     } else {
-        const response = await getPercentCached({
+        const result = await getPercentCached({
             apiToken: argv.apiToken,
             zoneId: argv.zoneId,
             host: argv.host,
             sinceTime: sinceTime.toISOString(),
             untilTime: untilTime.toISOString(),
         });
+        results = [result];
+    }
 
-        console.table([response]);
+    console.table(results);
+
+    if (argv.outputFile) {
+        saveToCSV(results, argv.outputFile);
     }
 };
 
-run()
-.catch(error => {
+run().catch(error => {
     console.error('Error:', error.message);
     process.exit(1);
 });
