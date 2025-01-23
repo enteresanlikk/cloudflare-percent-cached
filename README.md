@@ -18,7 +18,7 @@ A command-line tool to check the cache hit ratio for Cloudflare zones. It can an
 ### Local Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cloudflare-percent-cached.git
+git clone https://github.com/enteresanlikk/cloudflare-percent-cached.git
 cd cloudflare-percent-cached
 
 # Install dependencies
@@ -26,11 +26,6 @@ npm install
 
 # Link the package globally
 npm link
-```
-
-### Global Installation (when published)
-```bash
-npm install -g cloudflare-percent-cached
 ```
 
 ## Configuration
