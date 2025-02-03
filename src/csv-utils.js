@@ -8,12 +8,23 @@ const readSitesFromCSV = async (filePath) => {
 
 const saveToCSV = (data, outputFile) => {
     const parser = new Parser({
-        fields: ['zoneId', 'host', 'sinceTime', 'untilTime', 'percentCached', 'totalRequests', 'cachedRequests'],
+        fields: [
+            'zoneId',
+            'host',
+            'sinceTime',
+            'untilTime',
+            'percentCached',
+            'percentNoneCached',
+            'totalRequests',
+            'cachedRequests',
+            'noneCachedRequests'
+        ],
         transforms: [
             (item) => ({
                 ...item,
                 totalRequests: Number(item.totalRequests),
-                cachedRequests: Number(item.cachedRequests)
+                cachedRequests: Number(item.cachedRequests),
+                noneCachedRequests: Number(item.noneCachedRequests)
             })
         ]
     });

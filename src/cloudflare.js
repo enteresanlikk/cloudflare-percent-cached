@@ -85,16 +85,27 @@ const getPercentCached = async ({
         }
     }
 
-    const percentCached = ((cachedRequests / totalRequests) * 100).toFixed(2) + '%';
+    let percentCached = 0;
+    let percentNoneCached = 0;
+    let noneCachedRequests = 0;
+
+    if (totalRequests > 0) {
+        noneCachedRequests = totalRequests - cachedRequests;
+
+        percentCached = (cachedRequests / totalRequests) * 100;
+        percentNoneCached = (noneCachedRequests / totalRequests) * 100;
+    }
 
     return {
         zoneId,
         host,
         sinceTime,
         untilTime,
-        percentCached,
+        percentCached: percentCached.toFixed(2) + '%',
+        percentNoneCached: percentNoneCached.toFixed(2) + '%',
         totalRequests: Number(totalRequests),
         cachedRequests: Number(cachedRequests),
+        noneCachedRequests: Number(noneCachedRequests),
     };
 };
 
